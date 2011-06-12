@@ -1,0 +1,9 @@
+name: MemoryWarning
+main: com.webkonsept.bukkit.memorywarning.MemoryWarning
+version: 0.1
+website: http://minecraft.webkonsept.com/
+author: Fredrik Vold
+database: false
+description: >
+        POC for item-in-glass
+commands:
