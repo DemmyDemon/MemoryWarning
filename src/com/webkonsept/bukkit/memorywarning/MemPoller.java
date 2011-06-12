@@ -92,6 +92,7 @@ public class MemPoller implements Runnable {
 		else {
 			if (PANIC){
 				unPanicActions();
+				server.broadcastMessage(ChatColor.GREEN+"Server is no longer in memory panic mode, and has resumed normal operations.");
 				PANIC = false;
 			}
 		}
