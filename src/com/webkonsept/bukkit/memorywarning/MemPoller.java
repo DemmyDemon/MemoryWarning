@@ -15,7 +15,6 @@ import java.util.List;
 
 public class MemPoller implements Runnable {
 	
-
 	private MemoryWarning plugin;
 	private Server server;
 	private Double warnPercentage = 95.0;
@@ -25,6 +24,9 @@ public class MemPoller implements Runnable {
 	private List<Plugin> slayPlugins = new ArrayList<Plugin>();
 	private List<Plugin> disabledPlugins = new ArrayList<Plugin>();
 	private PluginManager pm;
+	private double memUsed = ( Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory() ) / 1048576;
+	private double memMax = Runtime.getRuntime().maxMemory() / 1048576;
+	private double percentageUsed = ( 100 / memMax) * memUsed;
 	
 	MemPoller (MemoryWarning instance){
 		plugin = instance;
@@ -35,6 +37,24 @@ public class MemPoller implements Runnable {
 			pm = use.getPluginManager();
 		}
 	}
+	public double getMemUsed(){
+		return memUsed;
+	}
+	public double getMemMax(){
+		return memMax;
+	}
+	public double getPercentageUsed(){
+		return percentageUsed;
+	}
+	public boolean isPanicing(){
+		return PANIC;
+	}
+	
+	public String getSummary(){
+		updateNumbers();
+		String msg = "Server is using "+(int)percentageUsed+"% of it's memory allowance ("+memUsed+"MB/"+memMax+"MB)";
+		return msg;
+	}
 	
 	public void setWarnPercentage(Double percent){
 		warnPercentage = percent;
@@ -44,6 +64,8 @@ public class MemPoller implements Runnable {
 		panicPercentage = percent;
 		plugin.babble("Will panic at "+warnPercentage+"%");
 	}
+	
+	
 	public void setPollingMessage (Boolean spam){
 		spamMe = spam;
 		if (spam){
@@ -67,20 +89,28 @@ public class MemPoller implements Runnable {
 			return;
 		}
 		Plugin thisPlugin = pm.getPlugin(pluginName);
-		if (thisPlugin != null){
+		if (thisPlugin != null && ! pluginName.equalsIgnoreCase("MemoryWarning")){
 			slayPlugins.add(thisPlugin);
 			plugin.babble(pluginName+" will be killed in panic");
+		}
+		else if (pluginName.equalsIgnoreCase("MemoryWarning")){
+			plugin.crap("MemoryWarning listed for killing. I refuse to disable myself.");
 		}
 		else {
 			plugin.crap("A plugin in the killPlugins list is NOT available: "+pluginName);
 		}
 	}
-	
+	private void updateNumbers() {
+		memUsed = ( Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory() ) / 1048576;
+		memMax = Runtime.getRuntime().maxMemory() / 1048576;
+		percentageUsed = ( 100 / memMax) * memUsed;
+	}
 	public void run() {
-		double memUsed = ( Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory() ) / 1048576;
-		double memMax = Runtime.getRuntime().maxMemory() / 1048576;
-		double percentageUsed = ( 100 / memMax) * memUsed;
-		String msg = "Server is using "+(int)percentageUsed+"% of it's memory allowance ("+memUsed+"MB/"+memMax+"MB)";
+		
+		// updateNumbers();  // getSummary now implies updateNumbers()
+		
+		String msg = getSummary();
+		
 		if ( percentageUsed > panicPercentage){
 			if (PANIC){
 				panicActions();

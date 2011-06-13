@@ -5,5 +5,9 @@ website: http://minecraft.webkonsept.com/
 author: Fredrik Vold
 database: false
 description: >
-        POC for item-in-glass
+        Get a warning when the server is about to run out of memory, and try to do something about it.
 commands:
+    memory:
+        aliases:
+        description: Interact with the MemoryWarning plugin
+        usage: /<command> [poll|setlevel level value]
