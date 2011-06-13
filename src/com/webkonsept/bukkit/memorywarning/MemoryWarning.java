@@ -111,7 +111,7 @@ public class MemoryWarning extends JavaPlugin {
 				return true;
 			}
 			else {
-				return commandUsage(sender,"Can't set level for"+args[1]);
+				return commandUsage(sender,"Can't set level for "+args[1]);
 			}
 		}
 		else if (args[0].equalsIgnoreCase("poll")){
@@ -134,13 +134,13 @@ public class MemoryWarning extends JavaPlugin {
 			"MemoryWarning command usage:",
 			"/memory [poll|setlevel level value]",
 			"With no argument, current status is returned.",
-			"setlevel knows the levels 'warning' and 'panic', ranges 60 to 99.9, decimals accepted.",
+			"setlevel knows the levels 'warn' and 'panic', ranges 60 to 99.9, decimals accepted.",
 			"poll will force a polling right now, with the relevant actions involved."
 		};
 		for (String line : lines){
 			sender.sendMessage(ChatColor.GRAY+line);
 		}
-		sender.sendMessage(ChatColor.LIGHT_PURPLE+"Problem: "+problem);
+		sender.sendMessage(ChatColor.LIGHT_PURPLE+problem);
 		return true;
 	}
 	public void loadConfig() {
