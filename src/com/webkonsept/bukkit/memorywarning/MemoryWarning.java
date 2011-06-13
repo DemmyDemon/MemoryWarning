@@ -132,7 +132,7 @@ public class MemoryWarning extends JavaPlugin {
 	private boolean commandUsage(CommandSender sender,String problem){
 		String[] lines = {
 			"MemoryWarning command usage:",
-			"/memory [poll|setlevel level value]",
+			"/memorywarning [poll|setlevel level value]",
 			"With no argument, current status is returned.",
 			"setlevel knows the levels 'warn' and 'panic', ranges 60 to 99.9, decimals accepted.",
 			"poll will force a polling right now, with the relevant actions involved."

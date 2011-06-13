@@ -7,7 +7,7 @@ database: false
 description: >
         Get a warning when the server is about to run out of memory, and try to do something about it.
 commands:
-    memory:
+    memorywarning:
         aliases:
         description: Interact with the MemoryWarning plugin
         usage: /<command> [poll|setlevel level value]
