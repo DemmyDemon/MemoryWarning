@@ -138,7 +138,7 @@ public class MemoryWarning extends JavaPlugin {
 			"poll will force a polling right now, with the relevant actions involved."
 		};
 		for (String line : lines){
-			sender.sendMessage(ChatColor.DARK_PURPLE+line);
+			sender.sendMessage(ChatColor.GRAY+line);
 		}
 		sender.sendMessage(ChatColor.LIGHT_PURPLE+"Problem: "+problem);
 		return true;
