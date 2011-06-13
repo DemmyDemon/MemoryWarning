@@ -15,8 +15,8 @@ public class MemoryWarningPlayerListener extends PlayerListener {
 		if (!plugin.isEnabled()) return;
 		if (plugin.poller.isPanicing() && ! event.getPlayer().isOp()){
 			event.getPlayer().kickPlayer("Sorry mate, the server is in Memory Panic.  Try again later.");
+			event.setJoinMessage(ChatColor.RED+event.getPlayer().getName()+" joined, but is rejected due to the current Memory Panic.");
 		}
-		event.setJoinMessage(ChatColor.RED+event.getPlayer().getName()+" joined, but is rejected due to the current Memory Panic.");
 	}
 
 }
