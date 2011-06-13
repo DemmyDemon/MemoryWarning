@@ -20,7 +20,6 @@ import java.util.logging.Logger;
 public class MemoryWarning extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
 	public MemPoller poller;
-	PluginDescriptionFile pdfFile = this.getDescription();
 	MemoryWarningPlayerListener playerListener = new MemoryWarningPlayerListener(this);
 	
 	// settings
@@ -174,12 +173,15 @@ public class MemoryWarning extends JavaPlugin {
 		config.save();
 	}
 	public void out(String message) {
+		PluginDescriptionFile pdfFile = this.getDescription();
 		log.info("[" + pdfFile.getName()+ " " + pdfFile.getVersion() + "] " + message);
 	}
 	public void crap(String message){
+		PluginDescriptionFile pdfFile = this.getDescription();
 		log.severe("[" + pdfFile.getName()+ " " + pdfFile.getVersion() + "] " + message);
 	}
 	public void babble(String message){
+		PluginDescriptionFile pdfFile = this.getDescription();
 		if (!this.verbose){ return; }
 		log.info("[" + pdfFile.getName()+ " " + pdfFile.getVersion() + " VERBOSE] " + message);
 	}
