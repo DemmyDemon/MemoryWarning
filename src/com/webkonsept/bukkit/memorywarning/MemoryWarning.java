@@ -26,8 +26,9 @@ public class MemoryWarning extends JavaPlugin {
 	boolean verbose = false;
 	Double warnPercentage = 95.0;
 	Double panicPercentage = 97.0;
-	Integer minutesBetweenPolls = 5;
-	Boolean pollingMessage = false;
+	Double calmPercentage = 94.0;
+	Integer minutesBetweenPolls = 1;
+	Boolean logPolling = false;
 	List<String> killPlugins = new ArrayList<String>();
 	
 
@@ -48,7 +49,8 @@ public class MemoryWarning extends JavaPlugin {
 		poller.setServer(getServer());
 		poller.setWarnPercentage(warnPercentage);
 		poller.setPanicPercentage(panicPercentage);
-		poller.setPollingMessage(pollingMessage);
+		poller.setCalmPercentage(calmPercentage);
+		poller.setLogPolling(logPolling);
 		poller.setSlayPlugins(killPlugins);
 		
 		Integer interval = minutesBetweenPolls * 1200; // On a good day it's 20 ticks per second, 1200 ticks per minute.
@@ -59,7 +61,7 @@ public class MemoryWarning extends JavaPlugin {
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_JOIN,playerListener,Priority.Normal,this);
 
-		if (pollingMessage){
+		if (logPolling){
 			out("I ill poll every "+interval+" server ticks, or rougly "+minutesBetweenPolls+" minutes apart, depending on load.");
 			out("NOTE:  I'm going to spam your console every time I poll memory usage!");
 		}
@@ -79,7 +81,8 @@ public class MemoryWarning extends JavaPlugin {
 		}
 		if (args.length == 0){
 			String message = poller.getSummary();
-			sender.sendMessage(ChatColor.LIGHT_PURPLE+"[MemoryWarning] "+message);
+			sender.sendMessage(ChatColor.LIGHT_PURPLE+message);
+			sender.sendMessage(ChatColor.LIGHT_PURPLE+"Levels: warn "+warnPercentage+"%, panic "+panicPercentage+"%, calm "+calmPercentage+"%");
 			if (player != null){
 				out( player.getName()+" got summary: "+message );
 			}
@@ -108,6 +111,11 @@ public class MemoryWarning extends JavaPlugin {
 			else if (args[1].equalsIgnoreCase("panic")){
 				poller.setPanicPercentage(value);
 				sender.sendMessage(ChatColor.LIGHT_PURPLE+"Panic percentage set to "+value+"%");
+				return true;
+			}
+			else if (args[1].equalsIgnoreCase("calm")){
+				poller.setCalmPercentage(value);
+				sender.sendMessage(ChatColor.LIGHT_PURPLE+"Calmdown percentage set to "+value+"%");
 				return true;
 			}
 			else {
@@ -152,8 +160,9 @@ public class MemoryWarning extends JavaPlugin {
 		verbose = config.getBoolean("log.verbose", verbose);
 		warnPercentage = config.getDouble("level.warn", warnPercentage);
 		panicPercentage = config.getDouble("level.panic", panicPercentage);
+		calmPercentage = config.getDouble("level.calm", calmPercentage);
 		minutesBetweenPolls = config.getInt("minutesBetweenPolls",minutesBetweenPolls);
-		pollingMessage = config.getBoolean("log.polling", pollingMessage);
+		logPolling = config.getBoolean("log.polling", logPolling);
 		killPlugins = config.getStringList("killPlugins",killPlugins);
 		
 		if (!configFile.exists()){
@@ -165,12 +174,12 @@ public class MemoryWarning extends JavaPlugin {
 				killPlugins.add("for MemoryWarning");
 				config.setProperty("killPlugins",killPlugins);
 				out("There was no config file, so I made one in "+getDataFolder().toString()+"/"+configFile.getName());
+				config.save();
 			} catch (IOException e) {
 				e.printStackTrace();
 				this.crap("IOError while creating config file: "+e.getMessage());
 			}
 		}
-		config.save();
 	}
 	public void out(String message) {
 		PluginDescriptionFile pdfFile = this.getDescription();

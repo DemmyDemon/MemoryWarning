@@ -19,6 +19,7 @@ public class MemPoller implements Runnable {
 	private Server server;
 	private Double warnPercentage = 95.0;
 	private Double panicPercentage = 97.0;
+	private Double calmPercentage = 94.0;
 	private Boolean spamMe = false;
 	private Boolean PANIC = false;
 	private List<Plugin> slayPlugins = new ArrayList<Plugin>();
@@ -62,11 +63,15 @@ public class MemPoller implements Runnable {
 	}
 	public void setPanicPercentage(Double percent){
 		panicPercentage = percent;
-		plugin.babble("Will panic at "+warnPercentage+"%");
+		plugin.babble("Will panic at "+panicPercentage+"%");
+	}
+	public void setCalmPercentage(Double percent){
+		calmPercentage = percent;
+		plugin.babble("Will calm down at "+calmPercentage+"%");
 	}
 	
 	
-	public void setPollingMessage (Boolean spam){
+	public void setLogPolling (Boolean spam){
 		spamMe = spam;
 		if (spam){
 			plugin.babble("Polling spam is enabled.");
@@ -107,8 +112,6 @@ public class MemPoller implements Runnable {
 	}
 	public void run() {
 		
-		// updateNumbers();  // getSummary now implies updateNumbers()
-		
 		String msg = getSummary();
 		
 		if ( percentageUsed > panicPercentage){
@@ -119,8 +122,8 @@ public class MemPoller implements Runnable {
 				PANIC = true;
 			}
 		}
-		else {
-			if (PANIC){
+		else if (PANIC){
+			if (percentageUsed < calmPercentage){
 				unPanicActions();
 				server.broadcastMessage(ChatColor.GREEN+"Server is no longer in memory panic mode, and has resumed normal operations.");
 				PANIC = false;
@@ -167,6 +170,7 @@ public class MemPoller implements Runnable {
 		for (Player player : server.getOnlinePlayers()){
 			if (!player.isOp()){
 				player.kickPlayer("Memory panic, so I had to let you go.  Come back in a few minutes.");
+				plugin.crap("Had to give "+player.getName()+" the boot :(");
 			}
 		}
 	}
