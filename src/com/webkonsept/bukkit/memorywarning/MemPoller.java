@@ -25,8 +25,9 @@ public class MemPoller implements Runnable {
 	private List<Plugin> slayPlugins = new ArrayList<Plugin>();
 	private List<Plugin> disabledPlugins = new ArrayList<Plugin>();
 	private PluginManager pm;
-	private double memUsed = ( Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory() ) / 1048576;
+	private double memUsed = ( Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ) / 1048576;
 	private double memMax = Runtime.getRuntime().maxMemory() / 1048576;
+	private double memFree = memMax - memUsed;
 	private double percentageUsed = ( 100 / memMax) * memUsed;
 	
 	MemPoller (MemoryWarning instance){
@@ -53,7 +54,7 @@ public class MemPoller implements Runnable {
 	
 	public String getSummary(){
 		updateNumbers();
-		String msg = "Server is using "+(int)percentageUsed+"% of it's memory allowance ("+memUsed+"MB/"+memMax+"MB)";
+		String msg = "Using "+memUsed+"MB/"+memMax+"MB ("+(int)percentageUsed+"%), "+memFree+"MB free";
 		return msg;
 	}
 	
@@ -106,8 +107,11 @@ public class MemPoller implements Runnable {
 		}
 	}
 	private void updateNumbers() {
-		memUsed = ( Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory() ) / 1048576;
+		memUsed = ( Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ) / 1048576;
 		memMax = Runtime.getRuntime().maxMemory() / 1048576;
+		memFree = memMax - memUsed;
+		//memUsed = ( Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory() ) / 1048576;
+		//memMax = Runtime.getRuntime().maxMemory() / 1048576;
 		percentageUsed = ( 100 / memMax) * memUsed;
 	}
 	public void run() {

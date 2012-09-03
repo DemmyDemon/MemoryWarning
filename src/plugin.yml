@@ -1,13 +1,24 @@
 name: MemoryWarning
 main: com.webkonsept.bukkit.memorywarning.MemoryWarning
-version: 0.1.17
-website: http://minecraft.webkonsept.com/
-author: Fredrik Vold
+version: 0.2
+branch: stable
+website: http://minecraft.webkonsept.com/plugins/details/MemoryWarning.html
+location: http://minecraft.webkonsept.com/plugins/download/MemoryWarning.jar
 database: false
-description: >
-        Get a warning when the server is about to run out of memory, and try to do something about it.
+description: Get a warning when the server is about to run out of memory, and try to do something about it.
 commands:
     memorywarning:
         aliases:
         description: Interact with the MemoryWarning plugin
         usage: /<command> [poll|setlevel level value]
+generators: [bukget]
+categories: [ADMN]
+maintainer: DemmyDemon
+authors: [DemmyDemon]
+conflicts: []
+required: []
+optional: []
+engines:
+    craftbukkit:
+        min: 935
+        max: 953
